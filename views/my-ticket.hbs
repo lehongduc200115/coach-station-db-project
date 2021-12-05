@@ -1,0 +1,33 @@
+<!-- blog section starts  -->
+
+<section class="blogs" id="blogs">
+
+    <h1 class="heading"> Thông Tin Vé</h1>
+
+    <div class="box-container">
+         {{#each rows}}
+        <div class="box" data-aos="fade-up">
+            <div class="image">
+                <img src="/images/ma-vach.jpg" alt="">
+            </div>
+            <div class="content">
+                <h3>Nhà xe {{this.ten_nha_xe}}</h3>
+                <h3>{{this.noi_di}} - {{this.noi_den}}</h3>
+                <h3>{{this.ten_tram_den}}</h3>
+                <h3>Mã vé: {{this.ma_ve}}</h3>
+                
+                <div class="icons">
+                    <a> <i class="fas fa-user"></i>Số vé: 1 Vé </a>
+                    <a> <i class="fas fa-calendar"></i>Ngày khởi hành: {{this.ngay_khoi_hanh}}</a>
+                    <a> <i class="fas fa-calendar"></i>Giờ khỏi hành: {{this.gio_khoi_hanh}}</a>
+                </div>
+            </div>
+        </div>
+          {{/each}}
+
+
+    </div>
+
+</section>
+
+<!-- blog section ends -->

@@ -1,0 +1,120 @@
+
+
+<section class="services" id="services">
+    <div class="box-container">
+
+        <div class="box" data-aos="zoom-in">
+            <span>01</span>
+            <i class="fas fa-hotel"></i>
+            <h3><a href="/">Chọn Tuyến</a></h3>
+            
+        </div>
+
+        <div class="box" data-aos="zoom-in">
+            <span>02</span>
+            <i class="fas fa-plane"></i>
+            <h3> <a href="/viewRoute">Chọn Chuyến</a></h3>
+            
+        </div>
+
+         <div class="box" data-aos="zoom-in">
+            <span>03</span>
+            <i class="fas fa-hiking"></i>
+            <h2> Xác nhận lộ trình</h2>
+        </div>
+
+        <div class="box" data-aos="zoom-in">
+            <span>04</span>
+            <i class="fas fa-globe"></i>
+            <h4> Thanh toán</h4>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- services section ends -->
+
+
+
+<!-- tickets section starts  -->
+
+<!-- pricing section starts  -->
+
+<section class="pricing" id="pricing">
+
+    <div class="box-container">
+        {{#each rows}}
+        <div class="box" data-aos="zoom-in-up">
+            <h3> Chi Tiết Chuyến Xe </h3>
+            <div class="price">
+                <span class="amount">{{this.ten_nha_xe}}</span>
+                <span>/{{this.noi_di}} - {{this.noi_den}}</span>
+            </div>
+            <ul>
+                <li>Điểm khởi hành:     <span>Bến xe Sài Gòn</span></li>
+                <li>Điểm đến:           <span>{{this.ten_tram_den}}</span></li>
+                <li>Ngày khỏi hành:     <span>{{this.ngay_khoi_hanh}}</span></li>
+                <li>Giờ khỏi hành:      <span>{{this.gio_khoi_hanh}}</span></li>
+                <li>Giá vé:             <span>{{this.gia_ve}} Đồng</span></li>
+                <li>Phụ thu:            <span>{{this.phu_thu}} Đồng</span></li>
+            </ul>
+            <!-- contact section starts  -->
+
+            <section class="contact" id="contact">
+
+                <form method="POST" action="/payment/{{this.ma_luot}}/{{this.ma_khach_hang}}" novalidate >
+
+                    <div class="inputBox">
+                        <input type="number" placeholder="Số lương vé" name="so_luong" aria-label="so_luong" >
+                        <input type="text" placeholder="Trạm đón trung gian" name="tram_don_trung_gian" aria-label="tram_don_trung_gian">
+                    </div>
+                    <h1 class="heading"> Tổng cộng: {{this.gia_ve}} Đồng </h1>
+                    <input type="submit" value="Thanh Toán" class="btn">
+
+                </form>  
+
+            </section>
+
+            <!-- contact section ends -->
+        </div>
+          {{/each}}
+
+    </div>
+
+</section>
+
+<!-- pricing section ends -->
+
+<!-- services section ends -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

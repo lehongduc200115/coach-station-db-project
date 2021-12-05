@@ -1,0 +1,138 @@
+{{#if alert}}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  {{alert}}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{{/if}}
+
+
+
+<!-- filter form section starts  -->
+
+<section class="add-form-container" data-aos="zoom-in">
+    <h2>ĐĂNG KÝ THÀNH VIÊN</h2>
+
+    <form method="POST" action="/register" novalidate>
+
+    
+        <div class="inputBox">
+            <span>HỌ</span>
+            <input type="text" placeholder="nhập Họ" name="ho">
+        </div>
+        
+        <div class="inputBox">
+            <span>TÊN</span>
+            <input type="text" placeholder="nhập Tên" name="ten">
+        </div>
+
+        <div class="inputBox">
+            <span>GIỚI TINH</span>
+            <select class="form-select" aria-label="Default select example">
+              <option selected></option>
+              <option  name="gioi_tinh" value="Nam">Nam</option>
+              <option  name="gioi_tinh" value="Nữ">Nữ</option>
+            </select>
+        </div>
+
+        <div class="inputBox">
+            <span>NGÀY SINH</span>
+            <input type="text" placeholder="yyyy-mm-dd" name="ngay_sinh">
+        </div>
+
+        <div class="inputBox">
+            <span>SỐ ĐIỆN THOẠI</span>
+            <input type="text" placeholder="nhập số điện thoại" name="so_dien_thoai">
+        </div>
+
+        <div class="inputBox">
+            <span>ĐỊA CHỈ</span>
+            <input type="text" placeholder="nhập địa chỉ" name="dia_chi">
+        </div>
+
+        <div class="inputBox">
+            <span>UserName</span>
+            <input type="text" placeholder="nhập username" name="userNameRES">
+        </div>
+
+        <div class="inputBox">
+            <span>Password</span>
+            <input type="text" placeholder="nhập password" name="passRES">
+        </div>
+
+
+        <input type="submit" value="Đăng Ký" class="btn">
+
+    </form>
+
+</section>
+
+<!-- filter form section ends -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- filter form section starts  -->
+
+<!-- <section class="add-form-container" data-aos="zoom-in">
+    <h2>ĐĂNG KÝ THÀNH VIÊN</h2>
+
+    <form method="POST" action="/addtuyen" novalidate>
+
+    
+        <div class="inputBox">
+            <span>HỌ</span>
+            <input type="text" placeholder="nhập Họ" value="{{this.ho}}" name="ho">
+        </div>
+        
+        <div class="inputBox">
+            <span>TÊN</span>
+            <input type="text" placeholder="nhập Tên" value="{{this.ten}}" name="ten">
+        </div>
+
+        <div class="inputBox">
+            <span>GIỚI TINH</span>
+            <select class="form-select" aria-label="Default select example">
+              <option selected></option>
+              <option value="{{Nam}}" name="gioi_tinh">Nam</option>
+              <option value="{{Nữ}}" name="gioi_tinh">Nu</option>
+            </select>
+        </div>
+
+        <div class="inputBox">
+            <span>NGÀY SINH</span>
+            <input type="text" placeholder="yyyy-mm-dd" value="{{this.ngay_sinh}}" name="ngay_sinh">
+        </div>
+
+        <div class="inputBox">
+            <span>SỐ ĐIỆN THOẠI</span>
+            <input type="text" placeholder="nhập số điện thoại" value="{{this.so_dien_thoai}}" name="so_dien_thoai">
+        </div>
+
+        <div class="inputBox">
+            <span>UserName</span>
+            <input type="text" placeholder="nhập username" value="{{this.userName}}" name="userName">
+        </div>
+
+        <div class="inputBox">
+            <span>Password</span>
+            <input type="text" placeholder="nhập password" value="{{this.pass}}" name="pass">
+        </div>
+
+
+        <input type="submit" value="Đăng Ký" class="btn">
+
+    </form>
+
+</section> -->
+
+<!-- filter form section ends -->

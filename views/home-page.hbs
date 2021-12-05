@@ -1,0 +1,101 @@
+<!-- home section starts  -->
+
+
+<section class="home" id="home">
+
+    <div class="image" data-aos="fade-down">
+        <img src="images/home-img.svg" alt="">
+    </div>
+
+    <div class="content" data-aos="fade-up">
+        <h3>Bến Xe Sài Gòn</h3>
+        <p>Welcome to Sai Gon Coach Station</p>
+        <a href="#" class="btn">Đăng ký Thành Viên</a>
+    </div>
+
+</section>
+
+<!-- home section ends -->
+
+<!-- filter form section starts  -->
+
+<section class="form-container" data-aos="zoom-in">
+
+    <form method="POST" action="/viewroute" novalidate>
+
+        <div class="inputBox">
+            <span>Điểm khởi hành</span>
+            <input type="text" placeholder="Bến xe Sài Gòn">
+        </div>
+
+        <div class="inputBox">
+            <span>Điểm đến</span>
+            <input type="text" placeholder="nhập điểm đến" name="diem_den" aria-label="diem_den">
+        </div>
+
+        <div class="inputBox">
+            <span>Ngày khởi hành</span>
+            <input type="date" value="2021-11-17" name="ngay_di" aria-label="ngay_di">
+        </div>
+
+        <input type="submit" value="Tìm tuyến xe" class="btn">
+
+    </form>
+
+</section>
+
+<!-- filter form section ends -->
+
+<!-- packages section starts  -->
+
+<section class="packages" id="packages">
+
+    <h1 class="heading"> Điểm đến phổ biến</h1>
+
+    <div class="box-container">
+
+        <div class="box" data-aos="fade-up">
+            <div class="image">
+                <img src="images/khanh-hoa.jpeg" alt="">
+                <h3> <i class="fas fa-map-marker-alt"></i> Khánh Hoà </h3>
+            </div>
+            <div class="content">
+              
+                <p>Cam Ranh, Nha Trang, ...</p>
+                <a href="/viewroute" class="btn"> Đặt vé</a>
+                <form method="POST" action="/viewroute" novalidate>
+
+                    
+            </div>
+        </div>
+
+        <div class="box" data-aos="fade-up">
+            <div class="image">
+                <img src="images/lam-dong.jpeg" alt="">
+                <h3> <i class="fas fa-map-marker-alt"></i> Lâm Đồng </h3>
+            </div>
+            <div class="content">
+              
+                <p>Bảo Lộc, Đà Lạt, Cát Tiên, ...</p>
+                <a href="#" class="btn"> Đặt vé</a>
+            </div>
+        </div>
+
+        <div class="box" data-aos="fade-up">
+            <div class="image">
+                <img src="images/vung-tau.jpeg" alt="">
+                <h3> <i class="fas fa-map-marker-alt"></i> Vũng Tàu </h3>
+            </div>
+            <div class="content">
+               
+                <p>Bà Rịa - Vũng Tàu</p>
+                <a href="#" class="btn"> Đặt vé</a>
+            </div>
+        </div>
+
+        
+    </div>
+
+</section>
+
+<!-- packages section ends -->

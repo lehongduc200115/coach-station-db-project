@@ -1,0 +1,108 @@
+
+<!-- services section starts  -->
+
+<section class="services" id="services">
+
+    <div class="box-container">
+
+        <div class="box" data-aos="zoom-in">
+            <span>01</span>
+            <i class="fas fa-hotel"></i>
+            <h3><a href="/">Chọn Tuyến</a></h3>
+            
+        </div>
+
+        <div class="box" data-aos="zoom-in">
+            <span>02</span>
+            <i class="fas fa-plane"></i>
+            <h3> <a href="/viewRoute">Chọn Chuyến</a></h3>
+            
+        </div>
+
+         <div class="box" data-aos="zoom-in">
+            <span>03</span>
+            <i class="fas fa-hiking"></i>
+            <h3><a href="/confirmroute">Xác nhận lộ trình</a> </h3>
+        </div>
+
+        <div class="box" data-aos="zoom-in">
+            <span>04</span>
+            <i class="fas fa-globe"></i>
+            <h2> Thanh toán</h2>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- services section ends -->
+
+
+<!-- blog section starts  -->
+
+<section class="blogs" id="blogs">
+
+    <h1 class="heading"> Hình Thức Thanh Toán</h1>
+
+    <div class="box-container">
+        {{#each rows}}
+        <div class="box" data-aos="fade-up">
+            <div class="image">
+                <img src="/images/blog-1.svg" alt="">
+            </div>
+            <div class="content">
+                <h3>Tài Khoản Ngân hàng</h3>
+                <a href="/myticket/{{this.ma_khach_hang}}" class="btn">Thanh Toán</a>
+                <div class="icons">
+                    <a> <i class="fas fa-user"></i>{{this.ho_ten}} </a>
+                    <a> <i class="fas fa-calendar"></i> {{this.so_dien_thoai}}</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="box" data-aos="fade-up">
+            <div class="image">
+                <img src="/images/blog-2.svg" alt="">
+            </div>
+            <div class="content">
+                <h3>Ví điện tử</h3>
+                <a href="/myticket/{{this.ma_khach_hang}}" class="btn">Thanh Toán</a>
+                <div class="icons">
+                  <a> <i class="fas fa-user"></i>{{this.ho_ten}} </a>
+                    <a> <i class="fas fa-calendar"></i> {{this.so_dien_thoai}}</a>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+
+
+    </div>
+
+</section>
+
+<!-- blog section ends -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

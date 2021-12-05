@@ -1,0 +1,97 @@
+
+<!-- services section starts  -->
+
+<section class="services" id="services">
+
+    <div class="box-container">
+
+        <div class="box" data-aos="zoom-in">
+            <span>Quản Lý</span>
+            <i class="fas fa-hotel"></i>
+            <h3><a href="/qlchuyenxe/{{this.ma_nha_xe}}">Chuyến Xe</a></h3>
+            
+        </div>
+
+        <div class="box" data-aos="zoom-in">
+            <span>Quản Lý</span>
+            <i class="fas fa-plane"></i>
+            <h2> <a href="/qlluotchay/{{this.ma_nha_xe}}">Lượt Chạy</a></h2>
+            
+        </div>
+
+         <div class="box" data-aos="zoom-in">
+            <span>Quản Lý</span>
+            <i class="fas fa-hiking"></i>
+            <h2><a href="/qlnhanvien/{{this.ma_nha_xe}}">Nhân viên</a> </h2>
+        </div>
+
+        <div class="box" data-aos="zoom-in">
+            <span>Quản Lý</span>
+            <i class="fas fa-globe"></i>
+            <h2> <a href="/qlxe/{{this.ma_nha_xe}}">Xe</a> </h2>
+        </div>
+
+        <div class="box" data-aos="zoom-in">
+            <span>Quản Lý</span>
+            <i class="fas fa-chart-bar"></i>
+            <h2> <a href="/qlxe/{{this.ma_nha_xe}}">Thống kê</a> </h2>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- services section ends -->
+
+
+
+
+
+<!-- filter form section starts  -->
+
+<section class="add-form-container" data-aos="zoom-in">
+    <h2>THÔNG TIN CHI TIẾT NHÂN VIÊN</h2>
+
+    <form method="POST" action="/addtuyen" novalidate>
+
+      	{{#each rows}}
+
+        <div class="inputBox">
+            <span>HỌ TÊN</span>
+            <input type="text" placeholder="nhập Nơi đi" value="{{this.ho_ten}}">
+        </div>
+
+        <div class="inputBox">
+            <span>GIỚI TÍNH</span>
+            <input type="text" placeholder="nhập Nơi đi" value="{{this.gioi_tinh}}">
+        </div>
+
+        <div class="inputBox">
+            <span>NGÀY SINH</span>
+            <input type="text" placeholder="nhập Nơi đến" value="{{this.ngay_sinh}}">
+        </div>
+
+        <div class="inputBox">
+            <span>ĐỊA CHỈ *</span>
+            <input type="text" placeholder="nhập Nơi đi" value="{{this.dia_chi}}" name="dia_chi_NV">
+        </div>
+
+        <div class="inputBox">
+            <span>SỐ ĐIỆN THOẠI *</span>
+            <input type="text" placeholder="nhập Nơi đi" value="{{this.so_dien_thoai}}" name="so_dien_thoai_NV">
+        </div>
+
+        <div class="inputBox">
+            <span>LOẠI NHÂN VIÊN</span>
+            <input type="text" placeholder="nhập Nơi đi" value="{{this.loai_nhan_vien}}">
+        </div>
+
+        <input type="submit" value="Cập Nhật" class="btn">
+
+        {{/each}}
+
+    </form>
+
+</section>
+
+<!-- filter form section ends -->

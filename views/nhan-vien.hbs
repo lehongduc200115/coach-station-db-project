@@ -1,0 +1,86 @@
+
+<!-- services section starts  -->
+
+<section class="services" id="services">
+
+    <div class="box-container">
+
+        <div class="box" data-aos="zoom-in">
+            <span>Quản Lý</span>
+            <i class="fas fa-hotel"></i>
+            <h3><a href="/qlchuyenxe/{{this.ma_nha_xe}}">Chuyến Xe</a></h3>
+            
+        </div>
+
+        <div class="box" data-aos="zoom-in">
+            <span>Quản Lý</span>
+            <i class="fas fa-plane"></i>
+            <h2> <a href="/qlluotchay/{{this.ma_nha_xe}}">Lượt Chạy</a></h2>
+            
+        </div>
+
+         <div class="box" data-aos="zoom-in">
+            <span>Quản Lý</span>
+            <i class="fas fa-hiking"></i>
+            <h2><a href="/qlnhanvien/{{this.ma_nha_xe}}">Nhân viên</a> </h2>
+        </div>
+
+        <div class="box" data-aos="zoom-in">
+            <span>Quản Lý</span>
+            <i class="fas fa-globe"></i>
+            <h2> <a href="/qlxe/{{this.ma_nha_xe}}">Xe</a> </h2>
+        </div>
+
+        <div class="box" data-aos="zoom-in">
+            <span>Quản Lý</span>
+            <i class="fas fa-chart-bar"></i>
+            <h2> <a href="/qlxe/{{this.ma_nha_xe}}">Thống kê</a> </h2>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- services section ends -->
+
+<!-- tables section starts  -->
+
+<section class="tables" id="tables">
+
+    <div class="box-container">
+        <h2>DANH SÁCH CÁC NHÂN VIÊN </h2>
+
+        <div class="row">
+          <div class="col-6 d-flex justify-content-end">
+            <a href="/" type="button" class="btn btn-primary align-self-center">Thêm Nhân Viên</a>
+             <h2> </h2>
+          </div>
+        </div>
+
+
+    <ul class="responsive-table">
+        <li class="table-header">
+          <div class="col col-6">MÃ NHÂN VIÊN</div>
+          <div class="col col-6">HỌ TÊN </div>
+          <div class="col col-6">GIỚI TÍNH</div>
+          <div class="col col-6">LOẠI NHÂN VIÊN</div>
+          <div class="col col-6"></div>
+          <div class="col col-6"></div>
+        </li>
+        {{#each rows}}
+        <li class="table-row">
+          <div class="col col-6" data-label="Job Id">{{this.ma_nhan_vien}}</div>
+          <div class="col col-6" data-label="Job Id">{{this.ho}} {{this.ten}}</div>
+          <div class="col col-6" data-label="Amount">{{this.gioi_tinh}}</div>
+          <div class="col col-6" data-label="Amount">{{this.loai_nhan_vien}}</div>
+          <div class="col col-6" data-label="Payment Status"> <a href="/editnhanvien/{{this.ma_nha_xe}}/{{this.ma_nhan_vien}}" type="button" class="btn btn-light btn-small-small"><i class="bi bi-pencil-square"></i></a></div>
+          <div class="col col-6" data-label="Payment Status"> <a href="#" type="button" class="btn btn-light btn-small-small"><i class="bi bi-trash"></i></a></div>
+        </li>
+          {{/each}}
+       
+  </ul>
+    </div>
+
+</section>
+
+<!-- tables section ends -->

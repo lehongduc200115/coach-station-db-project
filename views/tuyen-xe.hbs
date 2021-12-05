@@ -1,0 +1,73 @@
+
+<!-- services section starts  -->
+
+<section class="services" id="services">
+
+    <div class="box-container">
+
+        <div class="box" data-aos="zoom-in">
+            <span>Admin</span>
+            <i class="fas fa-hotel"></i>
+            <h3><a href="/admintuyenxe">Tuyến Xe</a></h3>
+            
+        </div>
+
+        <div class="box" data-aos="zoom-in">
+            <span>Admin</span>
+            <i class="fas fa-plane"></i>
+            <h2><a href="/adminnhaxe">Nhà xe</a></h2>
+            
+        </div>
+
+        <div class="box" data-aos="zoom-in">
+            <span>Admin</span>
+            <i class="fas fa-plane"></i>
+            <h2><a href="/adminnhaxe">Users</a></h2>
+            
+        </div>
+
+    </div>
+
+</section>
+
+<!-- services section ends -->
+
+
+
+<!-- tables section starts  -->
+
+<section class="tables" id="tables">
+
+    <div class="box-container">
+        <h2>DANH SÁCH CÁC TUYẾN XE </h2>
+
+        <div class="row">
+          <div class="col-6 d-flex justify-content-end">
+            <a href="/addtuyen" type="button" class="btn btn-primary align-self-center">Thêm Tuyến Xe</a>
+             <h2> </h2>
+          </div>
+        </div>
+
+
+    <ul class="responsive-table">
+        <li class="table-header">
+          <div class="col col-1">MÃ TUYẾN</div>
+          <div class="col col-2">NƠI ĐI</div>
+          <div class="col col-3">NƠI ĐẾN</div>
+          <div class="col col-2"></div>
+        </li>
+        {{#each rows}}
+        <li class="table-row">
+          <div class="col col-1" data-label="Job Id">{{this.ma_tuyen}}</div>
+          <div class="col col-2" data-label="Job Id">{{this.noi_di}} </div>
+          <div class="col col-3" data-label="Amount">{{this.noi_den}}</div>
+          <div class="col col-2" data-label="Payment Status"> <a href="/{{this.ma_tuyen}}" type="button" class="btn btn-light btn-small-small"><i class="bi bi-trash"></i> Xoá Tuyến</a></div>
+        </li>
+          {{/each}}
+       
+  </ul>
+    </div>
+
+</section>
+
+<!-- tables section ends -->

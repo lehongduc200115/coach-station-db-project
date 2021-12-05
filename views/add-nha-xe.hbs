@@ -1,0 +1,62 @@
+
+<!-- services section starts  -->
+
+<section class="services" id="services">
+
+    <div class="box-container">
+
+        <div class="box" data-aos="zoom-in">
+            <span>Admin</span>
+            <i class="fas fa-hotel"></i>
+            <h2><a href="/admintuyenxe">Tuyến Xe</a></h2>
+            
+        </div>
+
+        <div class="box" data-aos="zoom-in">
+            <span>Admin</span>
+            <i class="fas fa-plane"></i>
+            <h3><a href="/adminnhaxe">Nhà xe</a></h3>
+            
+        </div>
+
+    </div>
+
+</section>
+<!-- services section ends -->
+
+<!-- filter form section starts  -->
+
+<section class="add-form-container" data-aos="zoom-in">
+    <h2>THÊM TUYẾN NHÀ XE MỚI</h2>
+
+    <form method="POST" action="/addtuyen" novalidate>
+
+      
+
+        <div class="inputBox">
+            <span>TÊN NHÀ XE</span>
+            <input type="text" placeholder="nhập Nơi đi" value="{{this.noi_di}}" name="noi_di">
+        </div>
+
+        <div class="inputBox">
+            <span>EMAIL</span>
+            <input type="text" placeholder="nhập Nơi đến" value="{{this.noi_den}}" name="noi_den">
+        </div>
+
+        <div class="inputBox">
+            <span>ĐỊA CHỈ</span>
+            <input type="text" placeholder="nhập Nơi đến" value="{{this.noi_den}}" name="noi_den">
+        </div>
+
+        <div class="inputBox">
+            <span>ĐỊA CHỈ</span>
+            <input type="text" placeholder="nhập Nơi đến" value="{{this.noi_den}}" name="noi_den">
+        </div>
+
+        <input type="submit" value="Thêm Tuyến Xe" class="btn">
+
+    </form>
+
+</section>
+
+<!-- filter form section ends -->

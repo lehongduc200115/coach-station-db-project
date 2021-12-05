@@ -1,0 +1,77 @@
+
+<!-- services section starts  -->
+
+<section class="services" id="services">
+
+    <div class="box-container">
+
+        <div class="box" data-aos="zoom-in">
+            <span>Admin</span>
+            <i class="fas fa-hotel"></i>
+            <h2><a href="/admintuyenxe">Tuyến Xe</a></h2>
+            
+        </div>
+
+        <div class="box" data-aos="zoom-in">
+            <span>Admin</span>
+            <i class="fas fa-plane"></i>
+            <h3><a href="/adminnhaxe">Nhà xe</a></h3>
+            
+        </div>
+
+         <div class="box" data-aos="zoom-in">
+            <span>Admin</span>
+            <i class="fas fa-plane"></i>
+            <h2><a href="/adminnhaxe">Users</a></h2>
+            
+        </div>
+
+    </div>
+
+</section>
+
+<!-- services section ends -->
+
+<!-- tables section starts  -->
+
+<section class="tables" id="tables">
+
+    <div class="box-container">
+        <h2>DANH SÁCH CÁC NHÀ XE </h2>
+
+        <div class="row">
+          <div class="col-6 d-flex justify-content-end">
+            <a href="/" type="button" class="btn btn-primary align-self-center">Thêm Nhà Xe</a>
+             <h2> </h2>
+          </div>
+        </div>
+
+
+    <ul class="responsive-table">
+        <li class="table-header">
+          <div class="col col-6">MÃ NHÀ XE</div>
+          <div class="col col-6">TÊN NHÀ XE</div>
+          <div class="col col-6">EMAIL</div>
+          <div class="col col-6">SĐT</div>
+          <div class="col col-3">ĐỊA CHỈ</div>
+          <div class="col col-6"></div>
+          <div class="col col-6"></div>
+        </li>
+        {{#each rows}}
+        <li class="table-row">
+          <div class="col col-6" data-label="Job Id">{{this.ma_nha_xe}}</div>
+          <div class="col col-6" data-label="Job Id">{{this.ten_nha_xe}} </div>
+          <div class="col col-6" data-label="Amount">{{this.email}}</div>
+          <div class="col col-6" data-label="Amount">{{this.so_dien_thoai}}</div>
+          <div class="col col-3" data-label="Amount">{{this.dia_chi}}</div>
+          <div class="col col-6" data-label="Payment Status"> <a href="/editnhaxe/{{this.ma_nha_xe}}" type="button" class="btn btn-light btn-small-small"><i class="bi bi-pencil-square"></i></a></div>
+          <div class="col col-6" data-label="Payment Status"> <a href="#" type="button" class="btn btn-light btn-small-small"><i class="bi bi-trash"></i></a></div>
+        </li>
+          {{/each}}
+       
+  </ul>
+    </div>
+
+</section>
+
+<!-- tables section ends -->

@@ -1,0 +1,76 @@
+
+
+
+
+<!-- services section starts  -->
+
+<section class="services" id="services">
+
+    <div class="box-container">
+
+        <div class="box" data-aos="zoom-in">
+            <span>01</span>
+            <i class="fas fa-hotel"></i>
+            <h3><a href="/homeKH/{{this.ma_khach_hang}}">Chọn Tuyến</a></h3>
+            
+        </div>
+
+        <div class="box" data-aos="zoom-in">
+            <span>02</span>
+            <i class="fas fa-plane"></i>
+            <h2> Chọn Chuyến</h2>
+            
+        </div>
+
+         <div class="box" data-aos="zoom-in">
+            <span>03</span>
+            <i class="fas fa-hiking"></i>
+            <h4> Xác nhận lộ trình</h4>
+        </div>
+
+        <div class="box" data-aos="zoom-in">
+            <span>04</span>
+            <i class="fas fa-globe"></i>
+            <h4> Thanh toán</h4>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- services section ends -->
+
+<!-- tables section starts  -->
+
+<section class="tables" id="tables">
+
+    <div class="box-container">
+  		<h2>DANH SÁCH CÁC CHUYẾN XE </h2>
+  	<ul class="responsive-table">
+    	<li class="table-header">
+	      <div class="col col-1">NHÀ XE</div>
+	      <div class="col col-2">NGÀY KHỞI HÀNH</div>
+	      <div class="col col-3">ĐIỂM ĐẾN</div>
+	      <div class="col col-4">TRẠNG THÁI</div>
+	      <div class="col col-5"></div>
+	    </li>
+	   {{#each rows}}
+	    <li class="table-row">
+	      <div class="col col-1" data-label="Job Id">{{this.ten_nha_xe}}</div>
+	      <div class="col col-2" data-label="Job Id">{{this.ngay_khoi_hanh}} / {{this.gio_khoi_hanh}}</div>
+	      <div class="col col-3" data-label="Amount">{{this.ten_tram_den}}</div>
+	      <div class="col col-4" data-label="Payment Status">{{this.gia_ve}}</div>
+	      <div class="col col-5" data-label="Payment Status"> <a href="/confirmroute/{{this.ma_luot}}/{{this.ma_khach_hang}}" type="button" class="btn btn-light btn-small-small"><i class="bi bi-upc-scan"></i> Đặt Vé</a></div>
+	    </li>
+        {{/each}}
+      
+	   
+	   
+  </ul>
+	</div>
+
+</section>
+
+
+<!-- tables section ends -->
+

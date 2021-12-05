@@ -1,0 +1,68 @@
+
+<!-- services section starts  -->
+
+<section class="services" id="services">
+
+    <div class="box-container">
+
+        <div class="box" data-aos="zoom-in">
+            <span>Admin</span>
+            <i class="fas fa-hotel"></i>
+            <h2><a href="/admintuyenxe">Tuyến Xe</a></h2>
+            
+        </div>
+
+        <div class="box" data-aos="zoom-in">
+            <span>Admin</span>
+            <i class="fas fa-plane"></i>
+            <h3><a href="/adminnhaxe">Nhà xe</a></h3>
+            
+        </div>
+
+    </div>
+
+</section>
+<!-- services section ends -->
+
+<!-- filter form section starts  -->
+
+<section class="add-form-container" data-aos="zoom-in">
+    <h2>THÔNG TIN CHI TIẾT NHÀ XE</h2>
+    
+    <form method="POST" action="/editnhaxe/{{this.ma_nha_xe}}" novalidate>
+
+        {{#each rows}}
+        <div class="inputBox">
+            <span>TÊN NHÀ XE</span>
+            <input type="text" placeholder="nhập Nơi đi" value="{{this.ten_nha_xe}}" name="ten_nha_xe">
+        </div>
+
+        <div class="inputBox">
+            <span>EMAIL</span>
+            <input type="text" placeholder="nhập Nơi đến" value="{{this.email}}" name="email">
+        </div>
+
+        <div class="inputBox">
+            <span>SỐ ĐIỆN THOẠI</span>
+            <input type="text" placeholder="nhập Nơi đến" value="{{this.so_dien_thoai}}" name="so_dien_thoai">
+        </div>
+
+        <div class="inputBox">
+            <span>ĐỊA CHỈ</span>
+            <input type="text" placeholder="nhập Nơi đến" value="{{this.dia_chi}}" name="dia_chi">
+        </div>
+
+         <div class="inputBox">
+            <span>QUẢN LÝ</span>
+            <input type="text" placeholder="nhập Nơi đến" value="{{this.ho}} {{this.ten}}" name="ho">
+        </div>
+
+        <input type="submit" value="Cập Nhật" class="btn">
+         {{/each}}
+
+    </form>
+   
+
+</section>
+
+<!-- filter form section ends -->
