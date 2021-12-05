@@ -61,8 +61,8 @@ router.get('/qlxe/:ma_nha_xe', userController.qlXe);
 
 // router.get('/:ma_tuyen', userController.deleteTuyen);
 
-// router.get('/editnhaxe/:ma_nha_xe', userController.editNhaXe);
-// router.post('/editnhaxe/:ma_nha_xe', userController.updateNhaXe);
+router.get('/editnhaxe/:ma_nha_xe', userController.editNhaXe);
+router.post('/editnhaxe/:ma_nha_xe', userController.updateNhaXe);
 
 //router.get('/:ma_tuyen/:ma_nha_xe', userController.demo)
 
