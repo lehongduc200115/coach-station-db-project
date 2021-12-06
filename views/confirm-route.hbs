@@ -1,5 +1,3 @@
-
-
 <section class="services" id="services">
     <div class="box-container">
 
@@ -7,17 +5,17 @@
             <span>01</span>
             <i class="fas fa-hotel"></i>
             <h3><a href="/">Chọn Tuyến</a></h3>
-            
+
         </div>
 
         <div class="box" data-aos="zoom-in">
             <span>02</span>
             <i class="fas fa-plane"></i>
             <h3> <a href="/viewRoute">Chọn Chuyến</a></h3>
-            
+
         </div>
 
-         <div class="box" data-aos="zoom-in">
+        <div class="box" data-aos="zoom-in">
             <span>03</span>
             <i class="fas fa-hiking"></i>
             <h2> Xác nhận lộ trình</h2>
@@ -52,69 +50,49 @@
                 <span>/{{this.noi_di}} - {{this.noi_den}}</span>
             </div>
             <ul>
-                <li>Điểm khởi hành:     <span>Bến xe Sài Gòn</span></li>
-                <li>Điểm đến:           <span>{{this.ten_tram_den}}</span></li>
-                <li>Ngày khỏi hành:     <span>{{this.ngay_khoi_hanh}}</span></li>
-                <li>Giờ khỏi hành:      <span>{{this.gio_khoi_hanh}}</span></li>
-                <li>Giá vé:             <span>{{this.gia_ve}} Đồng</span></li>
-                <li>Phụ thu:            <span>{{this.phu_thu}} Đồng</span></li>
+                <li>Điểm khởi hành: <span>Bến xe Sài Gòn</span></li>
+                <li>Điểm đến: <span>{{this.ten_tram_den}}</span></li>
+                <li>Ngày khỏi hành: <span>{{this.ngay_khoi_hanh}}</span></li>
+                <li>Giờ khỏi hành: <span>{{this.gio_khoi_hanh}}</span></li>
+                <li>Giá vé: <span id="span-price">{{this.gia_ve}} Đồng</span></li>
+                <li>Phụ thu: <span>{{this.phu_thu}} Đồng</span></li>
             </ul>
             <!-- contact section starts  -->
 
             <section class="contact" id="contact">
 
-                <form method="POST" action="/payment/{{this.ma_luot}}/{{this.ma_khach_hang}}" novalidate >
+                <form method="POST" action="/payment/{{this.ma_luot}}/{{this.ma_khach_hang}}" novalidate>
 
                     <div class="inputBox">
-                        <input type="number" placeholder="Số lương vé" name="so_luong" aria-label="so_luong" >
-                        <input type="text" placeholder="Trạm đón trung gian" name="tram_don_trung_gian" aria-label="tram_don_trung_gian">
+                        <input type="number" placeholder="Số lương vé" name="so_luong" aria-label="so_luong"
+                            id="input-soluong">
+                        <input type="text" placeholder="Trạm đón trung gian" name="tram_don_trung_gian"
+                            aria-label="tram_don_trung_gian">
                     </div>
-                    <h1 class="heading"> Tổng cộng: {{this.gia_ve}} Đồng </h1>
+                    <h1 class="heading"> Tổng cộng: <p style="display:inline" id="p-sum">{{this.gia_ve}}</p> Đồng </h1>
                     <input type="submit" value="Thanh Toán" class="btn">
 
-                </form>  
+                </form>
 
             </section>
 
             <!-- contact section ends -->
         </div>
-          {{/each}}
+        {{/each}}
 
     </div>
 
 </section>
 
+<script>
+    $("input[type=number]").bind('keyup input', function () {
+        // handle event
+        currentNumberOfTickets = parseInt($(this).val());
+        ticketPrice = parseInt($('#span-price').html().split(" ")[0]);
+        $('#p-sum').html(currentNumberOfTickets*ticketPrice);
+    });
+</script>
+
 <!-- pricing section ends -->
 
 <!-- services section ends -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
