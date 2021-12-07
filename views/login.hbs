@@ -5,21 +5,21 @@
 <section class="add-form-container" data-aos="zoom-in">
     <h2>LOGIN</h2>
 
-    <form method="POST" action="/" novalidate>
+    <form method="POST" action="/" id="login-form" novalidate>
 
       
 
         <div class="inputBox">
             <span>User Name</span>
-            <input type="text" placeholder="nhập username" name="userName" aria-label="userName">
+            <input type="text" id="email" placeholder="nhập username" name="userName" aria-label="userName">
         </div>
 
         <div class="inputBox">
             <span>Password</span>
-            <input type="text" placeholder="nhập password" name="pass" aria-label="pass">
+            <input type="text" id="password" placeholder="nhập password" name="pass" aria-label="pass">
         </div>
 
-        <input type="submit" value="Login" class="btn">
+        <input type="submit" value="Login" class="btn" id="submit-btn">
         <a href="/register" class="btn">Đăng ký thành viên</a>
 
     </form>
@@ -27,4 +27,27 @@
 
 </section>
 
+<script>
+        $loginForm = $('#login-form');
+        $submitBtn = $('#submit-btn');
+        $submitBtn.on('click', (event) => {
+            event.preventDefault();
+            $.ajax({
+                url: "/auth/signin",
+                type: 'POST',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({
+                    email: $('#email').val(),
+                    password: $('#password').val()
+                }),
+                success: (data) => {
+                    console.log('success', data);
+                    $loginForm.submit();
+                },
+                error: function (jqXHR, error, errorThrown) {
+                    console.log(error);
+                },
+            })
+        })
+</script>
 <!-- filter form section ends -->
