@@ -1,12 +1,21 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
+const { signIn, loginRequired, userAuthen } = require('../api/auth');
 
 router.get('/', userController.loginPage);
 router.post('/', userController.validateUser);
 
 router.get('/register', userController.registerView);
 router.post('/register', userController.register);
+router.get('/logout', userController.logout);
+
+// auth rest api
+router.route('/auth/signin').post(signIn);
+
+// add some middlewares
+router.use(userAuthen);
+router.use(loginRequired);
 
 router.get('/homeKH/:ma_khach_hang', userController.homeKH);
 router.get('/viewroute/:ma_khach_hang', userController.viewRoute);

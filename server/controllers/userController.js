@@ -1,9 +1,33 @@
 const { pool } = require('../../config/mysql');
 const qr = require("qrcode");
+const jwt = require('jsonwebtoken');
+const { roleExtraction } = require('../api/auth');
+
+const PRIVATE_KEY = 'this is my private key';
 
 // Login Page
 exports.loginPage = (req, res) => {
-	res.render('login');
+	cookie = req.headers.cookie;
+	if (cookie != undefined) {
+		var role = undefined;
+		role = roleExtraction(cookie);
+		if (role == 'KH') {
+			pool.query('SELECT CONCAT(ho," ", ten) AS ho_ten, T.ma_khach_hang FROM USERS U, KHACH_HANG K, THANH_VIEN T WHERE userName = ? AND pass = ? AND T.ma_khach_hang = K.ma_khach_hang AND T.userID = U.userID AND vai_tro = "KH"',
+				[username, password],
+				(err, rows) => {
+					res.render('home-page-KH', { rows });
+				});
+		} else if (role == 'NV') {
+			res.redirect('/qlchuyenXe/' + rows[0].ma_nha_xe);
+		} else if (role == 'QL') {
+			res.redirect('/admintuyenxe');
+		} else {
+			res.clearCookie('Authorization');
+			res.render('login');
+		}
+	} else {
+		res.render('login');
+	}
 }
 
 // Validate User
@@ -90,6 +114,12 @@ exports.validateUser = (req, res) => {
 				res.render('login', { isFailed: false });
 			}
 		});
+}
+
+exports.logout = (req, res) => {
+	res.clearCookie("Authorization");
+
+	res.redirect('/');
 }
 
 

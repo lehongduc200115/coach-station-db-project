@@ -8,8 +8,11 @@
         {{#each rows}}
         <div class="box" data-aos="fade-up">
             {{!-- <div class="image"> --}}
-                <img src={{this.qrSrc}} alt="QRcode">
-            {{!-- </div> --}}
+                <img src={{this.qrSrc}} alt="QRcode" style="
+                    display: block;
+                    margin-left: auto;
+                    margin-right: auto;
+                    width: 20%;">
             <div class="content">
                 <h3>Nhà xe {{this.ten_nha_xe}}</h3>
                 <h3>{{this.noi_di}} - {{this.noi_den}}</h3>
