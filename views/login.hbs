@@ -1,13 +1,27 @@
-
-
 <!-- filter form section starts  -->
-
 <section class="add-form-container" data-aos="zoom-in">
     <h2>LOGIN</h2>
 
+    <div class="alert alert-danger" role="alert" style="
+    
+    position: relative;
+    padding: .75rem 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: .25rem;
+    
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    font-size:200%"
+    id="fail-login-alert"
+    hidden>
+        This is a danger alert—check it out!
+    </div>
+
     <form method="POST" action="/" id="login-form" novalidate>
 
-      
+
 
         <div class="inputBox">
             <span>User Name</span>
@@ -28,26 +42,27 @@
 </section>
 
 <script>
-        $loginForm = $('#login-form');
-        $submitBtn = $('#submit-btn');
-        $submitBtn.on('click', (event) => {
-            event.preventDefault();
-            $.ajax({
-                url: "/auth/signin",
-                type: 'POST',
-                contentType: "application/json; charset=utf-8",
-                data: JSON.stringify({
-                    email: $('#email').val(),
-                    password: $('#password').val()
-                }),
-                success: (data) => {
-                    console.log('success', data);
-                    $loginForm.submit();
-                },
-                error: function (jqXHR, error, errorThrown) {
-                    console.log(error);
-                },
-            })
+    $loginForm = $('#login-form');
+    $submitBtn = $('#submit-btn');
+    $submitBtn.on('click', (event) => {
+        event.preventDefault();
+        $.ajax({
+            url: "/auth/signin",
+            type: 'POST',
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({
+                email: $('#email').val(),
+                password: $('#password').val()
+            }),
+            success: (data) => {
+                console.log('success', data);
+                $loginForm.submit();
+            },
+            error: function (jqXHR, error, errorThrown) {
+                $('#fail-login-alert').html(jqXHR.responseJSON.message);
+                $('#fail-login-alert').removeAttr('hidden');
+            },
         })
+    })
 </script>
 <!-- filter form section ends -->
