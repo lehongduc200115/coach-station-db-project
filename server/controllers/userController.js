@@ -593,10 +593,23 @@ exports.updateNhaXe = (req, res) => {
 
 exports.addChuyenXe = (req, res) => {
 	let ma_nha_xe = req.params.ma_nha_xe;
+	let ma_tuyen = [];
+	pool.query('SELECT * FROM TUYEN_XE', [], (err, rows) => {
+		if (!err) {
+			for (let i = 0; i < rows.length; i++) {
+				ma_tuyen.push({
+					tuyen: rows[i].ma_tuyen,
+					diem_di: rows[i].noi_di,
+					diem_den: rows[i].noi_den,
+				});
+			}
+		}
+		console.log('Query Results: \n', rows);
+	});
 	pool.query('SELECT * FROM CHUYEN_XE WHERE ma_nha_xe = ? AND trang_thai=1', [ma_nha_xe], (err, rows) => {
 
 		if (!err) {
-			res.render('add-chuyen', { rows, ma_nha_xe });
+			res.render('add-chuyen', { rows, ma_nha_xe, ma_tuyen });
 		} else {
 			console.log(err);
 		}
