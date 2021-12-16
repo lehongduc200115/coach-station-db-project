@@ -1,0 +1,82 @@
+<head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', {
+            'packages': ['corechart'],
+            'callback': drawChart
+        });
+
+        function drawChart() {
+
+            $form = $('form').slice(1);
+            valKey = [];
+            valKey.push(['Task', 'Revenue']);
+            for (var i = 0; i < $form.length; i++) {
+                valKey.push([
+                    $form[i].elements[1].value,
+                    parseInt($form[i].elements[0].value),
+                ])
+            }
+
+            console.log(valKey);
+
+            var data = google.visualization.arrayToDataTable(valKey);
+            var options = {
+                title: 'Địa điểm được yêu thích',
+                is3D: true,
+            };
+            var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+            chart.draw(data, options);
+        }
+    </script>
+</head>
+<section class="services" id="services">
+
+    <div class="box-container">
+
+        <div class="box" data-aos="zoom-in">
+            <span>Quản Lý</span>
+            <i class="fas fa-hotel"></i>
+            <h3><a href="/qlchuyenxe/{{this.ma_nha_xe}}">Chuyến Xe</a></h3>
+
+        </div>
+
+        <div class="box" data-aos="zoom-in">
+            <span>Quản Lý</span>
+            <i class="fas fa-plane"></i>
+            <h2> <a href="/qlluotchay/{{this.ma_nha_xe}}">Lượt Chạy</a></h2>
+
+        </div>
+
+        <div class="box" data-aos="zoom-in">
+            <span>Quản Lý</span>
+            <i class="fas fa-hiking"></i>
+            <h2><a href="/qlnhanvien/{{this.ma_nha_xe}}">Nhân viên</a> </h2>
+        </div>
+
+        <div class="box" data-aos="zoom-in">
+            <span>Quản Lý</span>
+            <i class="fas fa-globe"></i>
+            <h2> <a href="/qlxe/{{this.ma_nha_xe}}">Xe</a> </h2>
+        </div>
+
+        <div class="box" data-aos="zoom-in">
+            <span>Quản Lý</span>
+            <i class="fas fa-chart-bar"></i>
+            <h2> <a href="/qlthongke/{{this.ma_nha_xe}}">Thống kê</a> </h2>
+        </div>
+
+    </div>
+
+</section>
+
+<section>
+    <div id="piechart" style="height: 500px;"></div>
+    {{#each rows}}
+    <form action="">
+        <input type="text" value={{this.revenue}} hidden>
+        <input type="text" value={{this.place}} hidden>
+    </form>
+    {{/each}}
+</section>

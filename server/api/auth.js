@@ -89,3 +89,16 @@ exports.roleExtraction = function (cookie) {
     console.log(`role = ${role}`);
     return role;
 }
+exports.usernameExtraction = function (cookie) {
+    var name = undefined;
+    jwt.verify(cookie.substr(cookie.search('=')+1).split('%20')[1], PRIVATE_KEY, function (err, decode) {
+        if (err) {
+            user = undefined;
+            console.log(err);
+        }
+        name = decode.name;
+    });
+
+    console.log(`name = ${name}`);
+    return name;
+}

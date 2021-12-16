@@ -1,4 +1,3 @@
-
 <!-- services section starts  -->
 
 <section class="services" id="services">
@@ -9,17 +8,17 @@
             <span>Quản Lý</span>
             <i class="fas fa-hotel"></i>
             <h3><a href="/qlchuyenxe/{{this.ma_nha_xe}}">Chuyến Xe</a></h3>
-            
+
         </div>
 
         <div class="box" data-aos="zoom-in">
             <span>Quản Lý</span>
             <i class="fas fa-plane"></i>
             <h2> <a href="/qlluotchay/{{this.ma_nha_xe}}">Lượt Chạy</a></h2>
-            
+
         </div>
 
-         <div class="box" data-aos="zoom-in">
+        <div class="box" data-aos="zoom-in">
             <span>Quản Lý</span>
             <i class="fas fa-hiking"></i>
             <h2><a href="/qlnhanvien/{{this.ma_nha_xe}}">Nhân viên</a> </h2>
@@ -40,57 +39,51 @@
     </div>
 
 </section>
-
 <!-- services section ends -->
-
-
-
-
 
 <!-- filter form section starts  -->
 
 <section class="add-form-container" data-aos="zoom-in">
-    <h2>THÔNG TIN CHI TIẾT NHÂN VIÊN</h2>
+    <h2>THÊM LƯỢT CHẠY</h2>
+    {{#each rows}}
 
-    <form method="POST" action="/addtuyen" novalidate>
+    <form method="POST" action="/editluotchay/{{this.ma_luot}}/{{this.ma_nha_xe}}" novalidate>
 
-      	{{#each rows}}
+
 
         <div class="inputBox">
-            <span>HỌ TÊN</span>
-            <input type="text" placeholder="nhập Nơi đi" value="{{this.ho_ten}}">
+            <span>GIỜ KHỞI HÀNH</span>
+            <input type="text" placeholder="nhập Giờ khởi hành" value="{{this.gio_khoi_hanh}}" name="gio_khoi_hanh">
         </div>
 
         <div class="inputBox">
-            <span>GIỚI TÍNH</span>
-            <input type="text" placeholder="nhập Nơi đi" value="{{this.gioi_tinh}}">
+            <span>PHỤ THU</span>
+            <input type="text" placeholder="nhập Phụ thu" value="{{this.phu_thu}}" name="phu_thu">
         </div>
-
         <div class="inputBox">
-            <span>NGÀY SINH</span>
-            <input type="text" placeholder="nhập Nơi đến" value="{{this.ngay_sinh}}">
-        </div>
+            <span>CHUYẾN XE</span>
+            <input type="text" placeholder="chọn mã chuyến xe" value="{{this.ma_chuyen}}" name="ma_chuyen_xe">
 
+            <datalist id="cars">
+                {{#each ma_luot_lst}}
+                <option value={{this.chuyen}}>{{this.diem_den}}</option>
+                {{/each}}
+            </datalist>
+        </div>
         <div class="inputBox">
-            <span>ĐỊA CHỈ *</span>
-            <input type="text" placeholder="nhập Nơi đi" value="{{this.dia_chi}}" name="dia_chi_NV">
+            <span>BIỂN SỐ XE</span>
+            <input type="text" placeholder="chọn xe" value="{{this.bien_so_xe}}" name="bien_so_xe" list="bien_so">
+
+            <datalist id="bien_so">
+                {{#each bien_so}}
+                <option value={{this.val}}></option>
+                {{/each}}
+            </datalist>
         </div>
-
-        <div class="inputBox">
-            <span>SỐ ĐIỆN THOẠI *</span>
-            <input type="text" placeholder="nhập Nơi đi" value="{{this.so_dien_thoai}}" name="so_dien_thoai_NV">
-        </div>
-
-        <div class="inputBox">
-            <span>LOẠI NHÂN VIÊN</span>
-            <input type="text" placeholder="nhập Nơi đi" value="{{this.loai_nhan_vien}}">
-        </div>
-
-        <input type="submit" value="Cập Nhật" class="btn">
-
-        {{/each}}
+        <input type="submit" value="Thêm lượt chạy" class="btn">
 
     </form>
+    {{/each}}
 
 </section>
 
