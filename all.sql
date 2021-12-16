@@ -789,3 +789,10 @@ BEGIN
     SET GLOBAL FOREIGN_KEY_CHECKS = 1;
 END $$
 DELIMITER ;
+
+
+select COUNT(ma_ve) as so_ve, CONCAT(nv.ho,nv.ten) as ho_ten from XUAT x, NHAN_VIEN nv 
+WHERE nv.ma_nhan_vien = x.ma_nhan_vien
+GROUP BY x.ma_nhan_vien;
+
+select sum(doanh_thu) as revenue, ten_tram_den as place from ( select COUNT(ma_ve)*cx.gia_ve as doanh_thu, cx.ten_tram_den from VE as v, LUOT_CHAY as lc, CHUYEN_XE as cx where v.ma_luot = lc.ma_luot and cx.ma_chuyen = lc.ma_chuyen GROUP BY v.ma_luot) as ket_qua group by ten_tram_den
