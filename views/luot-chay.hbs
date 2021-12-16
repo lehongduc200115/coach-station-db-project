@@ -34,7 +34,7 @@
         <div class="box" data-aos="zoom-in">
             <span>Quản Lý</span>
             <i class="fas fa-chart-bar"></i>
-            <h2> <a href="/qlxe/{{this.ma_nha_xe}}">Thống kê</a> </h2>
+            <h2> <a href="/qlthongke/{{this.ma_nha_xe}}">Thống kê</a> </h2>
         </div>
 
     </div>
@@ -52,7 +52,7 @@
 
         <div class="row">
           <div class="col-6 d-flex justify-content-end">
-            <a href="/" type="button" class="btn btn-primary align-self-center">Thêm Lượt Chạy</a>
+            <a href="/addluotchay/{{this.ma_nha_xe}}" type="button" class="btn btn-primary align-self-center">Thêm Lượt Chạy</a>
              <h2> </h2>
           </div>
         </div>
@@ -73,8 +73,8 @@
           <div class="col col-6" data-label="Job Id">{{this.ten_tram_den}} </div>
           <div class="col col-6" data-label="Amount">{{this.gio_khoi_hanh}}</div>
           <div class="col col-6" data-label="Amount">{{this.phu_thu}}</div>
-          <div class="col col-6" data-label="Payment Status"> <a href="/editchuyenxe/{{this.ma_chuyen}}" type="button" class="btn btn-light btn-small-small"><i class="bi bi-pencil-square"></i></a></div>
-          <div class="col col-6" data-label="Payment Status"> <a href="#" type="button" class="btn btn-light btn-small-small"><i class="bi bi-trash"></i></a></div>
+          <div class="col col-6" data-label="Payment Status"> <a href="/editluotchay/{{this.ma_luot}}/{{this.ma_nha_xe}}" type="button" class="btn btn-light btn-small-small"><i class="bi bi-pencil-square"></i></a></div>
+          <div class="col col-6" data-label="Payment Status"> <a href="/xoaluotchay/{{this.ma_luot}}/{{this.ma_nha_xe}}" type="button" class="btn btn-light btn-small-small"><i class="bi bi-trash"></i></a></div>
         </li>
           {{/each}}
        

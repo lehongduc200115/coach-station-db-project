@@ -1,9 +1,7 @@
 const { pool } = require('../../config/mysql');
 const qr = require("qrcode");
 const jwt = require('jsonwebtoken');
-const { roleExtraction } = require('../api/auth');
-
-const PRIVATE_KEY = 'this is my private key';
+const { roleExtraction, usernameExtraction } = require('../api/auth');
 
 // Login Page
 exports.loginPage = (req, res) => {
@@ -11,14 +9,20 @@ exports.loginPage = (req, res) => {
 	if (cookie != undefined) {
 		var role = undefined;
 		role = roleExtraction(cookie);
+		username = usernameExtraction(cookie);
 		if (role == 'KH') {
-			pool.query('SELECT CONCAT(ho," ", ten) AS ho_ten, T.ma_khach_hang FROM USERS U, KHACH_HANG K, THANH_VIEN T WHERE userName = ? AND pass = ? AND T.ma_khach_hang = K.ma_khach_hang AND T.userID = U.userID AND vai_tro = "KH"',
-				[username, password],
+			pool.query('SELECT CONCAT(ho," ", ten) AS ho_ten, T.ma_khach_hang FROM USERS U, KHACH_HANG K, THANH_VIEN T WHERE userName = ? AND T.ma_khach_hang = K.ma_khach_hang AND T.userID = U.userID AND vai_tro = "KH"',
+				[username],
 				(err, rows) => {
 					res.render('home-page-KH', { rows });
 				});
 		} else if (role == 'NV') {
-			res.redirect('/qlchuyenXe/' + rows[0].ma_nha_xe);
+			pool.query('SELECT CONCAT(ho," ", ten) AS ho_ten, ma_nhan_vien, ten_nha_xe, X.ma_nha_xe FROM USERS U, NHAN_VIEN N, NHA_XE X WHERE userName = ? AND N.userID = U.userID AND vai_tro = "NV" AND N.ma_nha_xe = X.ma_nha_xe',
+				[username],
+				(err, rows) => {
+					console.log(`rows: ${rows}`)
+					res.redirect('/qlchuyenXe/' + rows[0].ma_nha_xe);
+				});
 		} else if (role == 'QL') {
 			res.redirect('/admintuyenxe');
 		} else {
@@ -94,11 +98,6 @@ exports.validateUser = (req, res) => {
 			console.log(rows);
 			if (rows.length > 0) {
 				rows = rows[0];
-				// pool.query('SELECT CONCAT(ho," ", ten) AS ho_ten, T.ma_khach_hang FROM USERS U, KHACH_HANG K, THANH_VIEN T WHERE userName = ? AND pass = ? AND T.ma_khach_hang = K.ma_khach_hang AND T.userID = U.userID AND vai_tro = "KH"',
-				// 	[username, password],
-				// 	(err, rows) => {
-				// 		console.log(rows);
-				// 	});
 				if (rows.vai_tro == 'KH') {
 					pool.query('SELECT CONCAT(ho," ", ten) AS ho_ten, T.ma_khach_hang FROM USERS U, KHACH_HANG K, THANH_VIEN T WHERE userName = ? AND pass = ? AND T.ma_khach_hang = K.ma_khach_hang AND T.userID = U.userID AND vai_tro = "KH"',
 						[username, password],
@@ -106,7 +105,9 @@ exports.validateUser = (req, res) => {
 							res.render('home-page-KH', { rows });
 						});
 				} else if (rows.vai_tro == 'NV') {
-					res.redirect('/qlchuyenXe/' + rows[0].ma_nha_xe);
+					pool.query('SELECT CONCAT(ho," ", ten) AS ho_ten, ma_nhan_vien, ten_nha_xe, X.ma_nha_xe FROM USERS U, NHAN_VIEN N, NHA_XE X WHERE userName = ? AND pass = ? AND N.userID = U.userID AND vai_tro = "NV" AND N.ma_nha_xe = X.ma_nha_xe', [username, password], (err, rows) => {
+						res.redirect('/qlchuyenXe/' + rows[0].ma_nha_xe);
+					});
 				} else if (rows.vai_tro == 'QL') {
 					res.redirect('/admintuyenxe');
 				}
@@ -292,9 +293,15 @@ exports.myticket = (req, res) => {
 exports.qlChuyenXe = (req, res) => {
 	// User the connection
 	let ma_nha_xe = req.params.ma_nha_xe;
-	pool.query('SELECT * FROM CHUYEN_XE WHERE ma_nha_xe = ?', [ma_nha_xe], (err, rows) => {
+	pool.query('SELECT * FROM CHUYEN_XE WHERE ma_nha_xe = ? AND trang_thai=1', [ma_nha_xe], (err, rows) => {
 
 		if (!err) {
+			if (rows.length > 0) {
+				for (let i = 0; i < rows.length; i++) {
+					rows[i].ngay_khoi_hanh = rows[i].ngay_khoi_hanh.toISOString().split('T')[0];
+
+				}
+			}
 			res.render('chuyen-xe', { rows, ma_nha_xe });
 		} else {
 			console.log(err);
@@ -314,6 +321,9 @@ exports.qlLuotChay = (req, res) => {
 	pool.query('SELECT ma_luot, ten_tram_den, gio_khoi_hanh, phu_thu FROM CHUYEN_XE C, LUOT_CHAY L WHERE L.ma_chuyen = C.ma_chuyen AND ma_nha_xe = ?', [ma_nha_xe], (err, rows) => {
 
 		if (!err) {
+			for (row of rows) {
+				row.ma_nha_xe = ma_nha_xe;
+			}
 			res.render('luot-chay', { rows, ma_nha_xe });
 		} else {
 			console.log(err);
@@ -398,6 +408,34 @@ exports.adminTuyenXe = (req, res) => {
 
 exports.addTuyenXe = (req, res) => {
 	res.render('add-tuyen');
+}
+exports.addXe = (req, res) => {
+	res.render('add-xe');
+}
+exports.qlThongKe = (req, res) => {
+	pool.query("select sum(doanh_thu) as revenue, ten_tram_den as place from ( select COUNT(ma_ve)*cx.gia_ve as doanh_thu, cx.ten_tram_den from VE as v, LUOT_CHAY as lc, CHUYEN_XE as cx where v.ma_luot = lc.ma_luot and cx.ma_chuyen = lc.ma_chuyen GROUP BY v.ma_luot) as ket_qua group by ten_tram_den",
+		[],
+		(err, rows) => {
+			if (!err) {
+				for (let i = 0; i < rows.length; i++) {
+					rows[i].place = rows[i].place.replace(' ', '');
+				}
+				res.render('ql-thongke', {
+					rows,
+					ma_nha_xe: req.params.ma_nha_xe
+				})
+			}
+		})
+	// res.render('', {
+	// 	totals: [{
+	// 		place: 'BaRia',
+	// 		revenue: '100000'
+	// 	}, {
+	// 		place: 'VungTau',
+	// 		revenue: '20000'
+	// 	}
+	// 	]
+	// });
 }
 
 // Them Tuyen xe moi
@@ -514,10 +552,260 @@ exports.updateNhaXe = (req, res) => {
 	});
 }
 
+exports.addChuyenXe = (req, res) => {
+	let ma_nha_xe = req.params.ma_nha_xe;
+	pool.query('SELECT * FROM CHUYEN_XE WHERE ma_nha_xe = ? AND trang_thai=1', [ma_nha_xe], (err, rows) => {
 
+		if (!err) {
+			res.render('add-chuyen', { rows, ma_nha_xe });
+		} else {
+			console.log(err);
+		}
+		console.log('Query Results: \n', rows);
+	});
+}
+exports.editChuyenXe = (req, res) => {
+	let ma_chuyen_xe = req.params.ma_chuyen_xe;
+	pool.query('SELECT * FROM CHUYEN_XE WHERE ma_chuyen = ?', [ma_chuyen_xe], (err, rows) => {
 
+		if (!err) {
+			let ma_nha_xe = req.params.ma_nha_xe;
+			if (rows.length > 0) {
+				rows[0].ngay_khoi_hanh = rows[0].ngay_khoi_hanh.toISOString().split('T')[0];
+			}
+			res.render('edit-chuyen', { rows, ma_nha_xe });
+		} else {
+			console.log(err);
+		}
+		console.log('Query Results he: \n', rows);
+	});
+}
+exports.postEditChuyenXe = (req, res) => {
 
+	pool.query('CALL sua_chuyen_xe(?,?,?,?)',
+		[
+			req.params.ma_chuyen_xe,
+			req.body.tram_den,
+			req.body.ngay_khoi_hanh,
+			req.body.gia_ve
+		],
+		(err, rows) => {
+			if (!err) {
+				res.redirect(`/qlchuyenxe/${req.params.ma_nha_xe}`);
+			} else {
+				console.log(err);
+			}
+			console.log('Query Results:\n', rows);
+		});
+}
+exports.delChuyenXe = (req, res) => {
+	let ma_chuyen_xe = req.params.ma_chuyen_xe;
+	let ma_nha_xe = req.params.ma_nha_xe;
+	pool.query('UPDATE CHUYEN_XE SET trang_thai=0 WHERE ma_chuyen = ?', [ma_chuyen_xe], (err, rows) => {
 
+		if (!err) {
+			res.redirect(`/qlchuyenxe/${ma_nha_xe}`);
+		} else {
+			console.log(err);
+		}
+		console.log('Query Results: \n', rows);
+	});
+}
+exports.postAddChuyenXe = (req, res) => {
+	pool.query('CALL them_chuyen_xe(?,?,?,?,?)',
+		[
+			req.body.tram_den,
+			req.body.ngay_khoi_hanh,
+			req.body.gia_ve,
+			req.params.ma_nha_xe,
+			req.body.tuyen_xe,
+		],
+		(err, rows) => {
+			if (!err) {
+				res.redirect(`/qlchuyenxe/${req.params.ma_nha_xe}`);
+			} else {
+				console.log(err);
+			}
+			console.log('Query Results:\n', rows);
+		});
+}
+exports.addLuotChay = (req, res) => {
+	let ma_nha_xe = req.params.ma_nha_xe;
+	let ma_luot = [];
+	let bien_so = [];
+	pool.query('SELECT bien_so FROM XE WHERE ma_nha_xe = ?', [ma_nha_xe], (err, rows) => {
+		if (!err) {
+			for (let i = 0; i < rows.length; i++) {
+				bien_so.push({
+					val: rows[i].bien_so
+				});
+			}
+		}
+	});
+	pool.query('SELECT ma_chuyen, ten_tram_den FROM CHUYEN_XE WHERE ma_nha_xe = ?', [ma_nha_xe], (err, rows) => {
+		if (!err) {
+			for (let i = 0; i < rows.length; i++) {
+				ma_luot.push({
+					chuyen: rows[i].ma_chuyen,
+					diem_den: rows[i].ten_tram_den
+				});
+			}
+		}
+		console.log('Query Results: \n', rows);
+	});
+
+	pool.query('SELECT ma_luot, ten_tram_den, gio_khoi_hanh, phu_thu FROM CHUYEN_XE C, LUOT_CHAY L WHERE L.ma_chuyen = C.ma_chuyen AND ma_nha_xe = ?', [ma_nha_xe], (err, rows) => {
+
+		if (!err) {
+			console.log(`ma_luot: ${ma_luot}`)
+			console.log(`bien_so: ${bien_so}`)
+			return res.render('add-luot-chay', { rows, ma_nha_xe, ma_luot, bien_so });
+		} else {
+			console.log(err);
+		}
+		console.log('Query Results: \n', rows);
+	});
+
+	return;
+}
+exports.postAddLuotChay = (req, res) => {
+	let ma_nha_xe = req.params.ma_nha_xe;
+	let ma_luot = [];
+	let bien_so = [];
+	pool.query('SELECT bien_so FROM XE WHERE ma_nha_xe = ?', [ma_nha_xe], (err, rows) => {
+		if (!err) {
+			for (let i = 0; i < rows.length; i++) {
+				bien_so.push({
+					val: rows[i].bien_so
+				});
+			}
+		}
+	});
+	pool.query('SELECT ma_chuyen, ten_tram_den FROM CHUYEN_XE WHERE ma_nha_xe = ?', [ma_nha_xe], (err, rows) => {
+		if (!err) {
+			for (let i = 0; i < rows.length; i++) {
+				ma_luot.push({
+					chuyen: rows[i].ma_chuyen,
+					diem_den: rows[i].ten_tram_den
+				});
+			}
+		}
+		console.log('Query Results: \n', rows);
+	});
+
+	pool.query('CALL them_luot_chay(?,?,?,?)',
+		[
+			req.body.gio_khoi_hanh,
+			req.body.phu_thu,
+			req.body.ma_chuyen_xe,
+			req.body.bien_so_xe
+		],
+		(err, rows) => {
+
+			if (!err) {
+				return res.redirect(`/qlluotchay/${ma_nha_xe}`);
+			} else {
+				console.log(err);
+			}
+			console.log('Query Results: \n', rows);
+		});
+
+	return;
+}
+exports.editLuotChay = (req, res) => {
+	let ma_nha_xe = req.params.ma_nha_xe;
+	let ma_luot_chay = req.params.ma_luot_chay;
+	let ma_luot_lst = [];
+	let bien_so = [];
+	pool.query('SELECT bien_so FROM XE WHERE ma_nha_xe = ?', [ma_nha_xe], (err, rows) => {
+		if (!err) {
+			for (let i = 0; i < rows.length; i++) {
+				bien_so.push({
+					val: rows[i].bien_so
+				});
+			}
+		}
+	});
+	pool.query('SELECT ma_chuyen, ten_tram_den FROM CHUYEN_XE WHERE ma_nha_xe = ?', [ma_nha_xe], (err, rows) => {
+		if (!err) {
+			for (let i = 0; i < rows.length; i++) {
+				ma_luot_lst.push({
+					chuyen: rows[i].ma_chuyen,
+					diem_den: rows[i].ten_tram_den
+				});
+			}
+		}
+		console.log('Query Results: \n', rows);
+	});
+	pool.query('SELECT ma_luot, ten_tram_den, gio_khoi_hanh, phu_thu, L.ma_chuyen, bien_so as bien_so_xe FROM CHUYEN_XE C, LUOT_CHAY L WHERE L.ma_chuyen = C.ma_chuyen AND ma_luot = ?', 
+		[ma_luot_chay],
+		(err, rows) => {
+
+		if (!err) {
+			for (row of rows) {
+				row.ma_luot_lst = ma_luot_lst;
+				row.ma_nha_xe = ma_nha_xe;
+				row.bien_so = bien_so;
+			}
+			return res.render('edit-luot-chay', { rows, ma_nha_xe });
+		} else {
+			console.log(err);
+		}
+		console.log('Query Results: \n', rows);
+	});
+}
+exports.postEditLuotChay = (req, res) => {
+	let ma_nha_xe = req.params.ma_nha_xe;
+	let ma_luot_chay = req.params.ma_luot_chay;
+	pool.query('CALL sua_luot_chay(?,?,?,?)',
+		[
+			ma_luot_chay,
+			req.body.gio_khoi_hanh,
+			req.body.phu_thu,
+			req.body.bien_so_xe
+		],
+		(err, rows) => {
+			if (!err) {
+				return res.redirect(`/qlluotchay/${ma_nha_xe}`);
+			} else {
+				console.log(err);
+			}
+			console.log('Query Results: \n', rows);
+		});
+}
+exports.delLuotChay = (req, res) => {
+	let ma_luot_chay = req.params.ma_luot_chay;
+	let ma_nha_xe = req.params.ma_nha_xe;
+	pool.query('CALL xoa_luot_chay(?)', [ma_luot_chay], (err, rows) => {
+
+		if (!err) {
+			res.redirect(`/qlluotchay/${ma_nha_xe}`);
+		} else {
+			console.log(err);
+		}
+		console.log('Query Results: \n', rows);
+	});
+}
+
+// Them Tuyen xe moi
+// exports.addChuyenXe = (req, res) => {
+// 	const { noi_di, noi_den } = req.body;
+// 	pool.getConnection((err, connection) => {
+// 		if (err) throw err; // not connected
+// 		console.log('Connected as ID ' + pool.threadId);
+
+// 		// User the connection
+// 		connection.query('INSERT INTO TUYEN_XE SET ma_tuyen = CAST(FLOOR(RAND()*(999999-100000+1)+100000) AS CHAR), noi_di = ?, noi_den = ?', [noi_di, noi_den], (err, rows) => {
+// 			connection.release();
+// 			if (!err) {
+// 				res.render('add-tuyen');
+// 			} else {
+// 				console.log(err);
+// 			}
+// 			console.log('Query Results:\n', rows);
+// 		});
+// 	});
+// }
 
 
 

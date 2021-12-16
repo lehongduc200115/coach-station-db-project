@@ -448,3 +448,245 @@ INSERT INTO hang_hoa VALUES ('KH0000005', 'HH0000001', 80, 50, 3);
 INSERT INTO hang_hoa VALUES ('KH0000009', 'HH0000002', 150, 100, 8);
 INSERT INTO hang_hoa VALUES ('KH0000012', 'HH0000003', 100, 100, 8);
 INSERT INTO hang_hoa VALUES ('KH0000015', 'HH0000004', 200, 50, 5);
+
+
+create trigger users_table_insert
+before insert on USERS
+for each ROW 
+BEGIN 
+	insert into users_seq values (NULL);
+	set NEW.userID = concat('ID',LPAD(LAST_INSERT_ID() , 7, '0'));
+END;
+
+create trigger khach_hang_table_insert
+before insert on KHACH_HANG
+for each ROW 
+BEGIN 
+	insert into khach_hang_seq values (NULL);
+	set NEW.ma_khach_hang = concat('KH',LPAD(LAST_INSERT_ID() , 7, '0'));
+END;
+
+
+DROP PROCEDURE IF EXISTS `REGISTER`;
+CREATE PROCEDURE REGISTER(
+	IN ho varchar(25), 
+	IN ten varchar(25),
+	IN so_dien_thoai varchar(10),
+	IN ngay_sinh date, 
+	IN gioi_tinh varchar(3),
+	IN dia_chi varchar(50), 
+	IN userName varchar(20),
+	IN pass varchar(20))
+BEGIN
+	DECLARE uid char(9);
+    DECLARE mkh char(9);
+
+    INSERT INTO USERS (userID, pass, userName, vai_tro) VALUES ('', pass, userName, 'KH');
+   	SELECT userID into uid FROM USERS ORDER BY userID DESC LIMIT 1;
+    INSERT INTO KHACH_HANG (ma_khach_hang, ho, ten, so_dien_thoai) VALUES ('', ho, ten, so_dien_thoai);
+   	SELECT ma_khach_hang into mkh FROM KHACH_HANG ORDER BY ma_khach_hang DESC LIMIT 1;
+    INSERT INTO THANH_VIEN (ma_khach_hang, ngay_sinh, dia_chi, gioi_tinh, userID) VALUES (mkh, ngay_sinh, dia_chi, gioi_tinh, uid);
+END;
+
+ALTER TABLE SG_coach_station.VE MODIFY COLUMN ngay_dat date DEFAULT CURRENT_DATE() NULL;
+
+
+-- quan ly chuyen xe luot chay nhan vien xe
+-- global configuration
+SET GLOBAL log_bin_trust_function_creators = 1;
+
+-- kiet
+CREATE FUNCTION `ma_moi`(
+    `ma` CHAR(9))
+RETURNS CHAR(9)
+BEGIN
+    DECLARE loai_ma CHAR(2);
+    DECLARE ma_so CHAR(7); 
+    DECLARE temp INT; 
+
+    SET loai_ma = LEFT(ma, 2);
+    SET ma_so = RIGHT(ma, 7);
+    SET temp = CAST(ma_so AS SIGNED) + 1;
+    SET ma_so = LPAD(CAST(temp AS CHAR), 7, "0");
+	
+    RETURN CONCAT(loai_ma, ma_so);
+END;
+
+DROP PROCEDURE IF EXISTS `them_chuyen_xe`;
+CREATE PROCEDURE `them_chuyen_xe`(
+	IN ten_tram_den VARCHAR(20),
+	IN ngay_khoi_hanh VARCHAR(20),
+	IN gia_ve VARCHAR(10),
+	IN ma_nhaxe char(9),
+	IN ma_tuyenxe char(9))
+BEGIN
+	DECLARE ma_chuyen_moi CHAR(9);
+    
+    -- Kiem tra nha xe co ton tai
+   	IF (SELECT COUNT(*) FROM NHA_XE WHERE ma_nha_xe = ma_nhaxe) = 0 THEN
+		SIGNAL SQLSTATE '45000'
+			SET MESSAGE_TEXT = "Mã nhà xe không tồn tại !";
+	END IF;
+    -- Kiem tra tuyen xe co ton tai
+    IF (SELECT COUNT(*) FROM TUYEN_XE WHERE ma_tuyen = ma_tuyenxe) = 0 THEN
+		SIGNAL SQLSTATE '45000'
+			SET MESSAGE_TEXT = "Mã tuyến xe không tồn tại !";
+	END IF;
+
+	-- Tien hanh them moi
+    SET GLOBAL FOREIGN_KEY_CHECKS = 0;
+	SET ma_chuyen_moi = (SELECT MAX(ma_chuyen) FROM CHUYEN_XE);
+	SET ma_chuyen_moi = ma_moi(ma_chuyen_moi);
+	INSERT INTO CHUYEN_XE VALUES (ma_chuyen_moi, ten_tram_den, STR_TO_DATE(ngay_khoi_hanh, "%Y-%m-%d"), gia_ve, ma_nhaxe, ma_tuyenxe, TRUE);
+    SET GLOBAL FOREIGN_KEY_CHECKS = 1;
+END;
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS `sua_chuyen_xe`$$
+CREATE DEFINER = `root`@`localhost` PROCEDURE `sua_chuyen_xe`(
+	IN ma_chuyenxe char(9),
+    IN ten_tram_den_moi VARCHAR(20),
+	IN ngay_khoi_hanh_moi VARCHAR(20),
+	IN gia_ve_moi VARCHAR(10))
+BEGIN
+	-- Kiem tra chuyen xe co ton tai
+   	IF (SELECT COUNT(*) FROM chuyen_xe WHERE ma_chuyen = ma_chuyenxe) = 0 THEN
+		SIGNAL SQLSTATE '45000'
+			SET MESSAGE_TEXT = "Mã chuyến xe không tồn tại !";
+	END IF;
+
+	-- Tien hanh update
+    SET GLOBAL FOREIGN_KEY_CHECKS = 0;
+	UPDATE  
+			chuyen_xe
+		SET
+			ten_tram_den = ten_tram_den_moi,
+            ngay_khoi_hanh = STR_TO_DATE(ngay_khoi_hanh, "%Y-%m-%d"),
+            gia_ve = gia_ve_moi
+		WHERE
+			ma_chuyen = ma_chuyenxe;
+    SET GLOBAL FOREIGN_KEY_CHECKS = 1;
+END $$
+DELIMITER ;
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS `xoa_chuyen_xe`$$
+CREATE DEFINER = `root`@`localhost` PROCEDURE `xoa_chuyen_xe`(
+	IN ma_chuyenxe CHAR(9))
+BEGIN
+	-- inactive cac luot chay cua chuyen xe
+	UPDATE
+		LUOT_CHAY 
+	SET
+		trang_thai = FALSE
+	WHERE
+		ma_chuyen = ma_chuyenxe;
+        
+	-- xoa cac tram don trung gian
+	DELETE FROM
+		tram_don_trung_gian
+	WHERE
+		ma_chuyen = ma_chuyenxe;
+    
+    -- xoa chuyen xe
+    DELETE FROM
+		chuyen_xe
+	WHERE
+		ma_chuyen = ma_chuyenxe;
+       
+END $$
+DELIMITER ;
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS `them_luot_chay`$$
+CREATE DEFINER = `root`@`localhost` PROCEDURE `them_luot_chay`(
+	IN gio_khoi_hanh VARCHAR(8),
+	IN phu_thu 	int(11),
+	IN ma_chuyenxe  char(9),
+	IN bien_so_xe char(9))
+BEGIN
+	DECLARE ma_luot_moi CHAR(9);
+    -- Kiem tra chuyen xe co ton tai
+   	IF (SELECT COUNT(*) FROM chuyen_xe WHERE ma_chuyen = ma_chuyenxe) = 0 THEN
+		SIGNAL SQLSTATE '45000'
+			SET MESSAGE_TEXT = "Mã chuyến xe không tồn tại !";
+	END IF;
+    -- Kiem tra xe co ton tai
+    IF (SELECT COUNT(*) FROM xe WHERE bien_so = bien_so_xe) = 0 THEN
+		SIGNAL SQLSTATE '45000'
+			SET MESSAGE_TEXT = "Biển số xe không tồn tại !";
+	END IF;
+    
+	-- Tien hanh them moi
+    SET GLOBAL FOREIGN_KEY_CHECKS = 0;
+	SET ma_luot_moi = (SELECT MAX(ma_luot) FROM luot_chay);
+	SET ma_luot_moi = ma_moi(ma_luot_moi);
+	INSERT INTO luot_chay VALUES (ma_luot_moi, STR_TO_DATE(gio_khoi_hanh, "%H:%i:%s"), phu_thu, ma_chuyenxe, bien_so_xe, TRUE, TRUE);
+    SET GLOBAL FOREIGN_KEY_CHECKS = 1;
+END $$
+DELIMITER ;
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS `sua_luot_chay`$$
+CREATE DEFINER = `root`@`localhost` PROCEDURE `sua_luot_chay`(
+	IN ma_luot_chay CHAR(9),
+    IN gio_khoi_hanh_moi VARCHAR(8),
+	IN phu_thu_moi int(11),
+	IN bien_so_moi char(9))
+BEGIN
+	-- Kiem tra luot chay co ton tai
+   	IF (SELECT COUNT(*) FROM luot_chay WHERE ma_luot = ma_luot_chay) = 0 THEN
+		SIGNAL SQLSTATE '45000'
+			SET MESSAGE_TEXT = "Mã lượt chạy không tồn tại !";
+	END IF;
+	-- Kiem tra xe co ton tai
+    IF (SELECT COUNT(*) FROM xe WHERE bien_so = bien_so_moi) = 0 THEN
+		SIGNAL SQLSTATE '45000'
+			SET MESSAGE_TEXT = "Biển số xe không tồn tại !";
+	END IF;
+    
+    SET GLOBAL FOREIGN_KEY_CHECKS = 0;
+	UPDATE  
+			luot_chay
+		SET
+			gio_khoi_hanh = STR_TO_DATE(gio_khoi_hanh_moi, "%H:%i:%s"),
+            phu_thu = phu_thu_moi,
+            bien_so = bien_so_moi
+		WHERE
+			ma_luot = ma_luot_chay;
+    SET GLOBAL FOREIGN_KEY_CHECKS = 1;
+END $$
+DELIMITER ;
+
+-- Procedure xoa_luot_chay nay co san tren file drive cua Khang
+DELIMITER $$
+DROP PROCEDURE IF EXISTS `xoa_luot_chay`$$
+CREATE DEFINER = `root`@`localhost` PROCEDURE `xoa_luot_chay`(
+	IN ma_luot_chay CHAR(9))
+BEGIN
+	-- inactive cac luot chay truoc thoi diem xoa
+	UPDATE
+		LUOT_CHAY 
+	INNER JOIN
+		CHUYEN_XE
+	ON
+		LUOT_CHAY.ma_chuyen = CHUYEN_XE.ma_chuyen
+	SET
+		LUOT_CHAY.trang_thai = FALSE
+	WHERE
+		ma_luot = ma_luot_chay AND
+		ngay_khoi_hanh <= CURDATE() AND
+		gio_khoi_hanh <= CURRENT_TIME();
+	-- xoa cac luot chay trong tuong lai	
+	DELETE FROM
+		LUOT_CHAY
+	WHERE
+		ma_luot IN (SELECT
+						ma_luot
+					FROM
+						LUOT_CHAY
+					WHERE
+						ma_luot = ma_luot_chay AND	
+						trang_thai = TRUE);	
+END $$
+DELIMITER ;
