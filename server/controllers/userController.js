@@ -318,11 +318,12 @@ exports.qlChuyenXe = (req, res) => {
 exports.qlLuotChay = (req, res) => {
 	// User the connection
 	let ma_nha_xe = req.params.ma_nha_xe;
-	pool.query('SELECT ma_luot, ten_tram_den, gio_khoi_hanh, phu_thu FROM CHUYEN_XE C, LUOT_CHAY L WHERE L.ma_chuyen = C.ma_chuyen AND ma_nha_xe = ?', [ma_nha_xe], (err, rows) => {
+	pool.query('SELECT ma_luot, ten_tram_den, gio_khoi_hanh, phu_thu, L.trang_thai FROM CHUYEN_XE C, LUOT_CHAY L WHERE L.ma_chuyen = C.ma_chuyen AND ma_nha_xe = ?', [ma_nha_xe], (err, rows) => {
 
 		if (!err) {
 			for (row of rows) {
 				row.ma_nha_xe = ma_nha_xe;
+				row.trang_thai = (row.trang_thai == '1') ? true : false;
 			}
 			res.render('luot-chay', { rows, ma_nha_xe });
 		} else {
@@ -356,6 +357,42 @@ exports.editNhanVien = (req, res) => {
 	let ma_nhan_vien = req.params.ma_nhan_vien;
 	// User the connection
 	pool.query('SELECT CONCAT(ho," ",ten) AS ho_ten, gioi_tinh, ngay_sinh, dia_chi, so_dien_thoai, loai_nhan_vien FROM NHAN_VIEN WHERE ma_nhan_vien = ?', [ma_nhan_vien], (err, rows) => {
+		if (!err) {
+			if (rows.length > 0) {
+				for (let i = 0; i < rows.length; i++) {
+					rows[i].ngay_sinh = rows[i].ngay_sinh.toISOString().split('T')[0];
+				}
+			}
+			res.render('edit-nhan-vien', { rows, ma_nha_xe, ma_nhan_vien });
+		} else {
+			console.log(err);
+		}
+		console.log('The data from user table: \n', rows);
+	});
+}
+exports.postEditNhanVien = (req, res) => {
+	let ma_nha_xe = req.params.ma_nha_xe;
+	let ma_nhan_vien = req.params.ma_nhan_vien;
+	if (req.body.ho_ten != undefined) {
+		let ho_ten_splitted = req.body.ho_ten.split(' ');
+		var ten = ho_ten_splitted[ho_ten_splitted.length - 1];
+		var ho = ho_ten_splitted.slice(0, -1).join(' ');
+	}
+
+	// User the connection
+	pool.query('CALL sua_nhan_vien(?,?,?,?,?,?,?,?,?)',
+		[
+			ma_nhan_vien,
+			ho,
+			ten,
+			req.body.gioi_tinh,
+			req.body.ngay_sinh,
+			req.body.dia_chi,
+			req.body.so_dien_thoai,
+			(req.body.loai_nhan_vien === 'Quản lý') ? 'Quản lý' : 'Xe',
+			req.body.loai_cong_viec
+		],
+		(err, rows) => {
 		if (!err) {
 			res.render('edit-nhan-vien', { rows, ma_nha_xe });
 		} else {
@@ -413,6 +450,7 @@ exports.addXe = (req, res) => {
 	res.render('add-xe');
 }
 exports.qlThongKe = (req, res) => {
+	var rowsGet = [];
 	pool.query("select sum(doanh_thu) as revenue, ten_tram_den as place from ( select COUNT(ma_ve)*cx.gia_ve as doanh_thu, cx.ten_tram_den from VE as v, LUOT_CHAY as lc, CHUYEN_XE as cx where v.ma_luot = lc.ma_luot and cx.ma_chuyen = lc.ma_chuyen GROUP BY v.ma_luot) as ket_qua group by ten_tram_den",
 		[],
 		(err, rows) => {
@@ -420,22 +458,23 @@ exports.qlThongKe = (req, res) => {
 				for (let i = 0; i < rows.length; i++) {
 					rows[i].place = rows[i].place.replace(' ', '');
 				}
+				rowsGet['TK1'] = rows;
+			}
+		})
+	pool.query("select COUNT(ma_ve) as so_ve, CONCAT(nv.ho,nv.ten) as ho_ten from XUAT x, NHAN_VIEN nv WHERE nv.ma_nhan_vien = x.ma_nhan_vien GROUP BY x.ma_nhan_vien",
+		[],
+		(err, rows) => {
+			if (!err) {
+				for (let i = 0; i < rows.length; i++) {
+					rows[i].ho_ten = rows[i].ho_ten.replace(' ', '');
+				}
+				rowsGet['TK2'] = rows;
 				res.render('ql-thongke', {
-					rows,
+					rows: rowsGet,
 					ma_nha_xe: req.params.ma_nha_xe
 				})
 			}
 		})
-	// res.render('', {
-	// 	totals: [{
-	// 		place: 'BaRia',
-	// 		revenue: '100000'
-	// 	}, {
-	// 		place: 'VungTau',
-	// 		revenue: '20000'
-	// 	}
-	// 	]
-	// });
 }
 
 // Them Tuyen xe moi
@@ -554,10 +593,23 @@ exports.updateNhaXe = (req, res) => {
 
 exports.addChuyenXe = (req, res) => {
 	let ma_nha_xe = req.params.ma_nha_xe;
+	let ma_tuyen = [];
+	pool.query('SELECT * FROM TUYEN_XE', [], (err, rows) => {
+		if (!err) {
+			for (let i = 0; i < rows.length; i++) {
+				ma_tuyen.push({
+					tuyen: rows[i].ma_tuyen,
+					diem_di: rows[i].noi_di,
+					diem_den: rows[i].noi_den,
+				});
+			}
+		}
+		console.log('Query Results: \n', rows);
+	});
 	pool.query('SELECT * FROM CHUYEN_XE WHERE ma_nha_xe = ? AND trang_thai=1', [ma_nha_xe], (err, rows) => {
 
 		if (!err) {
-			res.render('add-chuyen', { rows, ma_nha_xe });
+			res.render('add-chuyen', { rows, ma_nha_xe, ma_tuyen });
 		} else {
 			console.log(err);
 		}

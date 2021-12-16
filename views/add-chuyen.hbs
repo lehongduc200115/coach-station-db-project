@@ -52,7 +52,7 @@
     
         <div class="inputBox">
             <span>TÊN TRẠM ĐẾN</span>
-            <input type="text" placeholder="nhập Nơi đi" value="{{this.noi_di}}" name="tram_den">
+            <input type="text" placeholder="nhập Trạm đến" value="{{this.noi_di}}" name="tram_den">
         </div>
 
         <div class="inputBox">
@@ -61,7 +61,13 @@
         </div>
         <div class="inputBox">
             <span>TUYẾN XE</span>
-            <input type="text" placeholder="nhập mã tuyến" value="{{this.noi_den}}" name="tuyen_xe">
+            <input type="text" placeholder="nhập mã tuyến" value="{{this.noi_den}}" name="tuyen_xe" list="cars">
+
+            <datalist id="cars">
+                {{#each ma_tuyen}}
+                <option value={{this.tuyen}}>{{this.diem_di}} - {{this.diem_den}}</option>
+                {{/each}}
+            </datalist>
         </div>
         <div class="inputBox">
             <span>GIÁ VÉ</span>

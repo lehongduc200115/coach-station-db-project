@@ -52,38 +52,44 @@
 <section class="add-form-container" data-aos="zoom-in">
     <h2>THÔNG TIN CHI TIẾT NHÂN VIÊN</h2>
 
-    <form method="POST" action="/addtuyen" novalidate>
-
+    <form method="POST" action="/editnhanvien/{{this.ma_nhan_vien}}/{{this.ma_nha_xe}}" novalidate>
       	{{#each rows}}
+
 
         <div class="inputBox">
             <span>HỌ TÊN</span>
-            <input type="text" placeholder="nhập Nơi đi" value="{{this.ho_ten}}">
+            <input type="text" placeholder="nhập Nơi đi" value="{{this.ho_ten}}" name="ho_ten">
         </div>
 
         <div class="inputBox">
             <span>GIỚI TÍNH</span>
-            <input type="text" placeholder="nhập Nơi đi" value="{{this.gioi_tinh}}">
+            <input type="text" placeholder="nhập Nơi đi" value="{{this.gioi_tinh}}" name="gioi_tinh">
         </div>
 
         <div class="inputBox">
             <span>NGÀY SINH</span>
-            <input type="text" placeholder="nhập Nơi đến" value="{{this.ngay_sinh}}">
+            <input type="text" placeholder="nhập Nơi đến" value="{{this.ngay_sinh}}" name="ngay_sinh">
         </div>
 
         <div class="inputBox">
             <span>ĐỊA CHỈ *</span>
-            <input type="text" placeholder="nhập Nơi đi" value="{{this.dia_chi}}" name="dia_chi_NV">
+            <input type="text" placeholder="nhập Nơi đi" value="{{this.dia_chi}}" name="dia_chi">
         </div>
 
         <div class="inputBox">
             <span>SỐ ĐIỆN THOẠI *</span>
-            <input type="text" placeholder="nhập Nơi đi" value="{{this.so_dien_thoai}}" name="so_dien_thoai_NV">
+            <input type="text" placeholder="nhập Nơi đi" value="{{this.so_dien_thoai}}" name="so_dien_thoai">
         </div>
 
         <div class="inputBox">
-            <span>LOẠI NHÂN VIÊN</span>
-            <input type="text" placeholder="nhập Nơi đi" value="{{this.loai_nhan_vien}}">
+            <span>LOẠI CÔNG VIỆC</span>
+            <input type="text" placeholder="nhập Nơi đi" value="{{this.loai_nhan_vien}}" name="loai_nhan_vien" list="list-cv">
+            <input type="text" placeholder="nhập Nơi đi" value="{{this.loai_cong_viec}}" name="loai_cong_viec" list="list-cv" hidden>
+            <datalist id="list-cv">
+                <option value='Quản lý'>Quản lý</option>
+                <option value='Lơ xe'>Xe</option>
+                <option value='Phụ xe'>Xe</option>
+            </datalist>
         </div>
 
         <input type="submit" value="Cập Nhật" class="btn">

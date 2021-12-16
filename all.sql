@@ -690,3 +690,102 @@ BEGIN
 						trang_thai = TRUE);	
 END $$
 DELIMITER ;
+
+
+-- NHAN_VIEN
+DELIMITER $$
+DROP PROCEDURE IF EXISTS `them_nhan_vien`$$
+CREATE DEFINER = `root`@`localhost` PROCEDURE `them_nhan_vien`(
+	IN ho VARCHAR(25),
+	IN ten VARCHAR(25),
+	IN gioi_tinh VARCHAR(3),
+	IN ngay_sinh char(10),
+	IN dia_chi varchar(50),
+    IN so_dien_thoai char(10),
+	IN loai_nhan_vien VARCHAR(10),
+	IN cong_viec VARCHAR(10),
+	IN ma_nhaxe char(9),
+	IN user_ID char(9))
+BEGIN
+	DECLARE ma_nv_moi CHAR(9);
+    
+    -- Kiem tra nha xe co ton tai
+   	IF (SELECT COUNT(*) FROM nha_xe WHERE ma_nha_xe = ma_nhaxe) = 0 THEN
+		SIGNAL SQLSTATE '45000'
+			SET MESSAGE_TEXT = "Mã nhà xe không tồn tại !";
+	END IF;
+    -- Kiem tra user co ton tai
+    IF (SELECT COUNT(*) FROM users WHERE userID = user_ID) = 0 THEN
+		SIGNAL SQLSTATE '45000'
+			SET MESSAGE_TEXT = "Mã users không tồn tại !";
+	END IF;
+    
+	-- Tien hanh them moi
+    SET GLOBAL FOREIGN_KEY_CHECKS = 0;
+	SET ma_nv_moi = (SELECT MAX(ma_nhan_vien) FROM nhan_vien);
+	SET ma_nv_moi = ma_moi(ma_nv_moi);
+	INSERT INTO nhan_vien VALUES (ma_nv_moi, ho, ten, gioi_tinh, STR_TO_DATE(ngay_sinh, "%Y-%m-%d"), dia_chi, so_dien_thoai, loai_nhan_vien, cong_viec, ma_nhaxe, user_ID);
+    SET GLOBAL FOREIGN_KEY_CHECKS = 1;
+END $$
+DELIMITER ;
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS `sua_nhan_vien`$$
+CREATE DEFINER = `root`@`localhost` PROCEDURE `sua_nhan_vien`(
+	IN ma_nv char(9),
+    IN ho_moi VARCHAR(25),
+	IN ten_moi VARCHAR(25),
+	IN gioi_tinh_moi VARCHAR(3),
+	IN ngay_sinh_moi char(10),
+	IN dia_chi_moi varchar(50),
+    IN so_dien_thoai_moi char(10),
+	IN loai_nhan_vien_moi VARCHAR(10),
+	IN cong_viec_moi VARCHAR(10))
+BEGIN
+    
+    -- Kiem tra nhan vien co ton tai
+   	IF (SELECT COUNT(*) FROM nhan_vien WHERE ma_nhan_vien = ma_nv) = 0 THEN
+		SIGNAL SQLSTATE '45000'
+			SET MESSAGE_TEXT = "Mã nhân viên không tồn tại !";
+	END IF;
+    
+	-- Tien hanh chinh sua
+     SET GLOBAL FOREIGN_KEY_CHECKS = 0;
+	UPDATE  
+			nhan_vien
+		SET
+            ho = ho_moi,
+        	ten = ten_moi,
+            gioi_tinh = gioi_tinh_moi,
+			ngay_sinh = STR_TO_DATE(ngay_sinh_moi, "%Y-%m-%d"),
+            dia_chi = dia_chi_moi, 
+            so_dien_thoai = so_dien_thoai_moi,
+            loai_nhan_vien = loai_nhan_vien_moi,
+            cong_viec =cong_viec_moi
+		WHERE
+			ma_nhan_vien = ma_nv;
+    SET GLOBAL FOREIGN_KEY_CHECKS = 1;
+END $$
+DELIMITER ;
+
+DELIMITER $$
+DROP PROCEDURE IF EXISTS `xoa_nhan_vien`$$
+CREATE DEFINER = `root`@`localhost` PROCEDURE `xoa_nhan_vien`(
+	IN ma_nv char(9))
+BEGIN
+    
+    -- Kiem tra nhan vien co ton tai
+   	IF (SELECT COUNT(*) FROM nhan_vien WHERE ma_nhan_vien = ma_nv) = 0 THEN
+		SIGNAL SQLSTATE '45000'
+			SET MESSAGE_TEXT = "Mã nhân viên không tồn tại !";
+	END IF;
+    
+	-- Tien hanh xoa
+    SET GLOBAL FOREIGN_KEY_CHECKS = 0;
+    DELETE FROM
+		nhan_vien
+	WHERE
+		ma_nhan_vien = ma_nv;
+    SET GLOBAL FOREIGN_KEY_CHECKS = 1;
+END $$
+DELIMITER ;
