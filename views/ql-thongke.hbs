@@ -8,7 +8,7 @@
 
         function drawChart() {
 
-            $form = $('form').slice(1);
+            $form = $('form.TK1');
             valKey = [];
             valKey.push(['Task', 'Revenue']);
             for (var i = 0; i < $form.length; i++) {
@@ -28,7 +28,44 @@
             var chart = new google.visualization.PieChart(document.getElementById('piechart'));
 
             chart.draw(data, options);
+
+            drawStacked();
         }
+
+        function drawStacked() {
+
+            $form = $('form.TK2');
+            valKey = [];
+            valKey.push(['Element', 'So Ve', { role: 'style' }]);
+            for (var i = 0; i < $form.length; i++) {
+                valKey.push([
+                    $form[i].elements[1].value,
+                    parseInt($form[i].elements[0].value),
+                    'color: #3366cc'
+                ])
+            }
+
+            console.log(valKey);
+            var data = google.visualization.arrayToDataTable(valKey);
+
+      var options = {
+        title: 'Biểu đồ nhân viên và số vé bán được',
+        isStacked: false,
+        hAxis: {
+          title: 'Nhân viên',
+          viewWindow: {
+            min: [7, 30, 0],
+            max: [17, 30, 0]
+          }
+        },
+        vAxis: {
+          title: 'Số vé'
+        }
+      };
+
+      var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+      chart.draw(data, options);
+    }
     </script>
 </head>
 <section class="services" id="services">
@@ -73,10 +110,17 @@
 
 <section>
     <div id="piechart" style="height: 500px;"></div>
-    {{#each rows}}
-    <form action="">
+  <div id="chart_div" style="margin-top: 20px"></div>
+    {{#each rows.TK1}}
+    <form action="" class='TK1'>
         <input type="text" value={{this.revenue}} hidden>
         <input type="text" value={{this.place}} hidden>
+    </form>
+    {{/each}}
+    {{#each rows.TK2}}
+    <form action="" class='TK2'>
+        <input type="text" value={{this.so_ve}} hidden>
+        <input type="text" value={{this.ho_ten}} hidden>
     </form>
     {{/each}}
 </section>
